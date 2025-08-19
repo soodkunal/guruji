@@ -365,7 +365,7 @@ echo "Voice ID stored in the database for professor_id=$prof_id."
 #~ curl --request POST \
   #~ --url https://api.elevenlabs.io/v1/voices/add \
   #~ --header 'Content-Type: multipart/form-data' \
-  #~ --header 'xi-api-key: REMOVED' \
+  #~ --header 'xi-api-key: sk_054cb28e447214de104e239a543f22b6a914cc3d279d982e' \
   #~ --form 'files=@/home/asinha/Documents/asinha.mp3' \
   #~ --form remove_background_noise=true \
   #~ --form description=asinha_first \
@@ -383,7 +383,7 @@ function g8_elab_txt2vox(){
 	#~ curl --request POST   
 		#~ --url 'https://api.elevenlabs.io/v1/text-to-speech/9BWtsMINqrJLrRacOk9x?output_format=mp3_44100_128'   
 		#~ --header 'Content-Type: application/json'   
-		#~ --header 'xi-api-key: REMOVED'   
+		#~ --header 'xi-api-key: sk_054cb28e447214de104e239a543f22b6a914cc3d279d982e'   
 		#~ --data '{"text": "Hello buddy, how are you doing today","voice_settings": {"stability": 1,"similarity_boost": 1,"style": 0.5} }' 
 		#~ --output "abc.mp3"	
 
@@ -450,9 +450,9 @@ function g8_elab_txt2vox(){
 
 function g8_var_init(){
 	# One time work, initial variables
-
-		export G8_CGPT_KEY="REMOVED"
-		export G8_ELAB_KEY="REMOVED"
+		export G8_CGPT_KEY="$Open_AI_API_KEY"
+		export G8_ELAB_KEY="$ELAB_API_KEY"
+		export G8_REPO = "https://github.com/soodkunal/video-retalking.git"
 		export GPT_API_URL="https://api.openai.com/v1/chat/completions"
 		export ELAB_API_URL="https://api.elevenlabs.io/v1/text-to-speech/$G8_ELABS_VOICE_ID"
 
@@ -1363,6 +1363,9 @@ print(response.choices[0].message.content.strip())
 
 echo " + $0 script started...."
 
+if [ -f .env ]; then
+  export $(cat .env | xargs)
+fi
 
 # Check if an argument is provided
 if [ -z "$1" ]; then
