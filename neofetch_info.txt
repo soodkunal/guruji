@@ -1,0 +1,19 @@
+kunal-sood@ksood 
+---------------- 
+OS: Ubuntu 24.04.3 LTS x86_64 
+Host: HP Pavilion TS Sleekbook 15 088B110000355900000310100 
+Kernel: 6.14.0-27-generic 
+Uptime: 3 hours, 30 mins 
+Packages: 2490 (dpkg), 13 (snap) 
+Shell: bash 5.2.21 
+Resolution: 1366x768 
+DE: GNOME 46.0 
+WM: Mutter 
+WM Theme: Adwaita 
+Theme: Yaru [GTK2/3] 
+Icons: Yaru [GTK2/3] 
+Terminal: gnome-terminal 
+CPU: Intel i5-3337U (4) @ 2.700GHz 
+GPU: Intel 3rd Gen Core processor Graphics Controller 
+Memory: 4126MiB / 15886MiB 
+

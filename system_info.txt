@@ -1,0 +1,105 @@
+===== SYSTEM INFO =====
+--- CPU Info ---
+Architecture:                         x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        36 bits physical, 48 bits virtual
+Byte Order:                           Little Endian
+CPU(s):                               4
+On-line CPU(s) list:                  0-3
+Vendor ID:                            GenuineIntel
+Model name:                           Intel(R) Core(TM) i5-3337U CPU @ 1.80GHz
+CPU family:                           6
+Model:                                58
+Thread(s) per core:                   2
+Core(s) per socket:                   2
+Socket(s):                            1
+Stepping:                             9
+CPU(s) scaling MHz:                   92%
+CPU max MHz:                          2700.0000
+CPU min MHz:                          800.0000
+BogoMIPS:                             3591.72
+Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm cpuid_fault epb pti ssbd ibrs ibpb stibp tpr_shadow flexpriority ept vpid fsgsbase smep erms xsaveopt dtherm ida arat pln pts vnmi md_clear flush_l1d
+Virtualization:                       VT-x
+L1d cache:                            64 KiB (2 instances)
+L1i cache:                            64 KiB (2 instances)
+L2 cache:                             512 KiB (2 instances)
+L3 cache:                             3 MiB (1 instance)
+NUMA node(s):                         1
+NUMA node0 CPU(s):                    0-3
+Vulnerability Gather data sampling:   Not affected
+Vulnerability Ghostwrite:             Not affected
+Vulnerability Itlb multihit:          KVM: Mitigation: Split huge pages
+Vulnerability L1tf:                   Mitigation; PTE Inversion; VMX conditional cache flushes, SMT vulnerable
+Vulnerability Mds:                    Mitigation; Clear CPU buffers; SMT vulnerable
+Vulnerability Meltdown:               Mitigation; PTI
+Vulnerability Mmio stale data:        Unknown: No mitigations
+Vulnerability Reg file data sampling: Not affected
+Vulnerability Retbleed:               Not affected
+Vulnerability Spec rstack overflow:   Not affected
+Vulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:             Mitigation; Retpolines; IBPB conditional; IBRS_FW; STIBP conditional; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected
+Vulnerability Srbds:                  Vulnerable: No microcode
+Vulnerability Tsx async abort:        Not affected
+
+--- Memory Info ---
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       4.1Gi       7.2Gi       631Mi       4.9Gi        11Gi
+Swap:          4.0Gi          0B       4.0Gi
+
+--- Disk Info ---
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs           1.6G  2.2M  1.6G   1% /run
+/dev/sda7       251G   61G  178G  26% /
+tmpfs           7.8G   72M  7.7G   1% /dev/shm
+tmpfs           5.0M  8.0K  5.0M   1% /run/lock
+efivarfs         88K   70K   14K  84% /sys/firmware/efi/efivars
+/dev/sda1        96M   32M   65M  33% /boot/efi
+tmpfs           1.6G  168K  1.6G   1% /run/user/1000
+
+--- PCI Devices ---
+00:00.0 Host bridge: Intel Corporation 3rd Gen Core processor DRAM Controller (rev 09)
+00:02.0 VGA compatible controller: Intel Corporation 3rd Gen Core processor Graphics Controller (rev 09)
+00:14.0 USB controller: Intel Corporation 7 Series/C210 Series Chipset Family USB xHCI Host Controller (rev 04)
+00:16.0 Communication controller: Intel Corporation 7 Series/C216 Chipset Family MEI Controller #1 (rev 04)
+00:1a.0 USB controller: Intel Corporation 7 Series/C216 Chipset Family USB Enhanced Host Controller #2 (rev 04)
+00:1b.0 Audio device: Intel Corporation 7 Series/C216 Chipset Family High Definition Audio Controller (rev 04)
+00:1c.0 PCI bridge: Intel Corporation 7 Series/C216 Chipset Family PCI Express Root Port 1 (rev c4)
+00:1c.1 PCI bridge: Intel Corporation 7 Series/C210 Series Chipset Family PCI Express Root Port 2 (rev c4)
+00:1c.2 PCI bridge: Intel Corporation 7 Series/C210 Series Chipset Family PCI Express Root Port 3 (rev c4)
+00:1d.0 USB controller: Intel Corporation 7 Series/C216 Chipset Family USB Enhanced Host Controller #1 (rev 04)
+00:1f.0 ISA bridge: Intel Corporation HM77 Express Chipset LPC Controller (rev 04)
+00:1f.2 RAID bus controller: Intel Corporation 82801 Mobile SATA Controller [RAID mode] (rev 04)
+00:1f.3 SMBus: Intel Corporation 7 Series/C216 Chipset Family SMBus Controller (rev 04)
+02:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL810xE PCI Express Fast Ethernet controller (rev 05)
+
+--- USB Devices ---
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 001 Device 002: ID 8087:0024 Intel Corp. Integrated Rate Matching Hub
+Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 002: ID 03f0:6a41 HP, Inc HP USB Optical Mouse
+Bus 002 Device 003: ID 1a40:0101 Terminus Technology Inc. Hub
+Bus 002 Device 004: ID 04f2:b35f Chicony Electronics Co., Ltd HP Truevision HD
+Bus 002 Device 006: ID 03f0:6941 HP, Inc HP Wired Keyboard
+Bus 002 Device 008: ID 0bda:c820 Realtek Semiconductor Corp. 802.11ac NIC
+Bus 002 Device 009: ID 14cd:6116 Super Top M6116 SATA Bridge
+Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 003 Device 002: ID 8087:0024 Intel Corp. Integrated Rate Matching Hub
+Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+
+--- Network Info ---
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: eno1: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc fq_codel state DOWN group default qlen 1000
+    link/ether a4:5d:36:6e:e5:26 brd ff:ff:ff:ff:ff:ff
+    altname enp2s0
+4: wlxe0ad4750570c: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether e0:ad:47:50:57:0c brd ff:ff:ff:ff:ff:ff
+    inet 192.168.1.13/24 brd 192.168.1.255 scope global dynamic noprefixroute wlxe0ad4750570c
+       valid_lft 75571sec preferred_lft 75571sec
+    inet6 fe80::3759:b7da:97a1:dde6/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
