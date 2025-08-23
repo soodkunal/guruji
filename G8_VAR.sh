@@ -7,7 +7,7 @@
 		echo "  + Initializing environment variables..." 
 		export G8_VER=`cat G8_VER`
 		export G8_HOME="$HOME"
-		export G8_PROJ="guruji"
+		export G8_PROJ="guruji/guruji"
 		export G8_PROJ_DIR="$G8_HOME/$G8_PROJ"
 		export G8_VT_DIR="$G8_HOME/$G8_PROJ/video-retalking/"
 		export G8_ANACONDA_VER="Anaconda3-2023.09-0-Linux-x86_64.sh"
