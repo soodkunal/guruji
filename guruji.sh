@@ -224,8 +224,12 @@ EOF
         echo "Voice ID added for '$professor_id'."
     fi
 
-    echo "[DEBUG] Current DB contents:"
-    sqlite3 "$DB_FILE" "SELECT * FROM professors;"
+	echo "[DEBUG] Professors table:"
+	sqlite3 "$DB_FILE" "SELECT * FROM professors;"
+
+	echo "[DEBUG] Voice IDs table:"
+	sqlite3 "$DB_FILE" "SELECT * FROM voice_ids;"
+
 }
 
 function g8_elab_del_voice() {
