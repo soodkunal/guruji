@@ -5,11 +5,14 @@
 # Kindly read the README.md file for further details
 
 # Load environment variables
+# Load environment variables safely
 if [ -f .env ]; then
   set -o allexport
   source .env
   set +o allexport
-  echo " + .env loaded"
+  echo "[DEBUG] G8_ELAB_KEY is loaded: ${G8_ELAB_KEY:0:5}******"
+else
+  echo "[ERROR] .env file not found!"
 fi
 
 # Basic Functions
