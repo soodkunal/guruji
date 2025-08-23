@@ -117,6 +117,10 @@ CREATE TABLE IF NOT EXISTS professors (
     gender TEXT,
     accent TEXT
 );
+CREATE TABLE IF NOT EXISTS voice_ids (
+    professor_id TEXT PRIMARY KEY,
+    voice_id TEXT
+);
 EOF
         echo " + Database created successfully."
     else
