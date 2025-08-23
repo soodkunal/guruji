@@ -1,3 +1,10 @@
+	    # G8_VAR.sh
+
+		# Load .env if present
+		if [ -f .env ]; then
+			export $(grep -v '^#' .env | xargs)
+		fi
+
 		export G8_CGPT_KEY="$Open_AI_API_KEY"
 		export G8_ELAB_KEY="$ELAB_API_KEY"
 		export G8_REPO="https://github.com/soodkunal/video-retalking.git"
