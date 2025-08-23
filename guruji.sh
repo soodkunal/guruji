@@ -106,52 +106,22 @@ function setup_database() {
 
     echo " + Initializing database at: $DB_FILE"
 
-    # Check directory exists
-    DB_DIR=$(dirname "$DB_FILE")
-    if [ ! -d "$DB_DIR" ]; then
-        echo " !! Database directory not found: $DB_DIR"
-        exit 1
-    fi
-
-    # Check if directory is writable
-    if [ ! -w "$DB_DIR" ]; then
-        echo " !! Directory not writable: $DB_DIR"
-        echo " >> Fix perms: sudo chown $USER:$USER $DB_DIR && chmod 775 $DB_DIR"
-        exit 1
-    fi
-
-    # Check if file exists, else create
     if [ ! -f "$DB_FILE" ]; then
-        echo " >> Creating new database: $DB_FILE"
-        sqlite3 $DB_FILE "" || {
-            echo " !! Failed to create database file."
-            exit 1
-        }
-    else
-        # If file exists but not writable
-        if [ ! -w "$DB_FILE" ]; then
-            echo " !! Database file is not writable: $DB_FILE"
-            echo " >> Fix perms: sudo chown $USER:$USER $DB_FILE && chmod 664 $DB_FILE"
-            exit 1
-        fi
-    fi
-
-    sqlite3 "$DB_FILE" <<EOF
+        echo " !! Database file not found: $DB_FILE"
+        echo " + Creating new database..."
+        sqlite3 "$DB_FILE" <<EOF
 CREATE TABLE IF NOT EXISTS professors (
     professor_id TEXT PRIMARY KEY,
     professor_name TEXT,
-    age TEXT,
+    age INTEGER,
     gender TEXT,
     accent TEXT
 );
-
-CREATE TABLE IF NOT EXISTS voice_ids (
-    professor_id TEXT PRIMARY KEY,
-    voice_id TEXT
-);
 EOF
-
-    echo " + Database initialized successfully."
+        echo " + Database created successfully."
+    else
+        echo " + Database already exists."
+    fi
 }
 
 function display_database() {
