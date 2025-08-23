@@ -3,7 +3,7 @@
 		export G8_REPO="https://github.com/soodkunal/video-retalking.git"
 		export GPT_API_URL="https://api.openai.com/v1/chat/completions"
 		export ELAB_API_URL="https://api.elevenlabs.io/v1/text-to-speech/$G8_ELABS_VOICE_ID"
-
+		export G8_GDOWN="https://drive.google.com/drive/folders/1zBiUk2J5iX0n7Gs7KR2WB1YjzkhlGf4V?usp=drive_link"
 		echo "  + Initializing environment variables..." 
 		export G8_VER=`cat G8_VER`
 		export G8_HOME="$HOME"
