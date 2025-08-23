@@ -1257,8 +1257,12 @@ print(response.choices[0].message.content.strip())
 echo " + $0 script started...."
 
 if [ -f .env ]; then
-  export $(cat .env | xargs)
+  set -a
+  source .env
+  set +a
 fi
+
+source G8_VAR.sh
 
 # Check if an argument is provided
 if [ -z "$1" ]; then
