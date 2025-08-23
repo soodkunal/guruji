@@ -1,9 +1,6 @@
 #!/bin/bash
 
 # ==========================================================================="
-# This script is used to demonstrate Guru ji, 
-# Kindly read the README.md file for further details
-
 # Basic Functions
 function g8_banner(){
 	echo "  + ------------------------------"
@@ -1260,12 +1257,7 @@ print(response.choices[0].message.content.strip())
 
 echo " + $0 script started...."
 
-if [ -f .env ]; then
-  set -a
-  source .env
-  set +a
-fi
-
+source .env
 source G8_VAR.sh
 
 # Check if an argument is provided
