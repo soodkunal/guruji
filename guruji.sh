@@ -202,8 +202,13 @@ EOF
 }
 
 
+    else
+        echo " + Database already exists."
+    fi
+}
+
 function upsert_voice_id_entry() {
-	# This function takes the professor information and stores into the database
+    # This function takes the professor information and stores into the database
     local professor_id="$1"
     local voice_id="$2"
 
@@ -215,18 +220,15 @@ UPDATE voice_ids
 SET voice_id = '$voice_id'
 WHERE professor_id = '$professor_id';
 EOF
-
-echo "Voice ID updated for $professor_id "
-
+        echo "Voice ID updated for $professor_id "
     else
         sqlite3 "$DB_FILE" <<EOF
 INSERT INTO voice_ids (professor_id, voice_id)
 VALUES ('$professor_id', '$voice_id');
 EOF
-
-echo "Voice ID added for '$professor_id'."
-
+        echo "Voice ID added for '$professor_id'."
     fi
+
     echo "[DEBUG] Current DB contents:"
     sqlite3 "$DB_FILE" "SELECT * FROM professors;"
 }
