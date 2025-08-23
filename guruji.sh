@@ -361,16 +361,6 @@ ON CONFLICT(professor_id) DO UPDATE SET voice_id=excluded.voice_id;
 EOF
 
 echo "Voice ID stored in the database for professor_id=$prof_id."
-
-#~ curl --request POST \
-  #~ --url https://api.elevenlabs.io/v1/voices/add \
-  #~ --header 'Content-Type: multipart/form-data' \
-  #~ --header 'xi-api-key: sk_054cb28e447214de104e239a543f22b6a914cc3d279d982e' \
-  #~ --form 'files=@/home/asinha/Documents/asinha.mp3' \
-  #~ --form remove_background_noise=true \
-  #~ --form description=asinha_first \
-  #~ --form 'labels="accent": "american","description": "calm","age": "young", "gender": "male","use_case": "narration"' \
-  #~ --form name=asinha_first
   
 	echo ""
 }
