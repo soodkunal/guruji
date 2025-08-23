@@ -4,17 +4,6 @@
 # This script is used to demonstrate Guru ji, 
 # Kindly read the README.md file for further details
 
-# Load environment variables
-# Load environment variables safely
-if [ -f .env ]; then
-  set -o allexport
-  source .env
-  set +o allexport
-  echo "[DEBUG] G8_ELAB_KEY is loaded: ${G8_ELAB_KEY:0:5}******"
-else
-  echo "[ERROR] .env file not found!"
-fi
-
 # Basic Functions
 function g8_banner(){
 	echo "  + ------------------------------"
@@ -1267,6 +1256,9 @@ print(response.choices[0].message.content.strip())
 
 echo " + $0 script started...."
 
+if [ -f .env ]; then
+  export $(cat .env | xargs)
+fi
 
 # Check if an argument is provided
 if [ -z "$1" ]; then
