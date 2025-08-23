@@ -1257,7 +1257,10 @@ print(response.choices[0].message.content.strip())
 echo " + $0 script started...."
 
 if [ -f .env ]; then
-  export $(cat .env | xargs)
+  set -o allexport
+  source .env
+  set +o allexport
+  echo " + Environment variables loaded from .env"
 fi
 
 # Check if an argument is provided
