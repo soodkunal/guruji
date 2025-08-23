@@ -200,8 +200,6 @@ EOF
     echo "[DEBUG] Current DB contents:"
     sqlite3 "$DB_FILE" "SELECT * FROM professors;"
 }
-
-
     else
         echo " + Database already exists."
     fi
