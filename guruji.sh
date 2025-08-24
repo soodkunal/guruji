@@ -953,9 +953,12 @@ function take_voice_id_entry_interactive() {
 }
 
 function g8_step2_gpt_conv_to_lecture(){
+	
+
+
     echo " + Step 2: Converting professor notes & metadata into a lecture using GPT"
     read -p "Enter Professor ID: " prof_id
-
+	
     # Fetch professor name from DB
     prof_name=$(sqlite3 "$DB_FILE" "SELECT professor_name FROM professors WHERE professor_id=$prof_id;")
     if [ -z "$prof_name" ]; then
@@ -964,14 +967,35 @@ function g8_step2_gpt_conv_to_lecture(){
     fi
 
     # Input files (created in Step 1)
-    G8_IN_PROF_TXT="./input/${prof_id}_lecture.txt"
-    G8_IN_MTDT="./input/${prof_id}_metadata.json"
+	# Ask user for file paths
+    read -e -p "Enter lecture text file path (or press Enter to auto-pick latest): " G8_IN_PROF_TXT
+    read -e -p "Enter metadata JSON file path (or press Enter to auto-pick latest): " G8_IN_MTDT
+
+    # Auto-pick latest if empty
+    if [ -z "$G8_IN_PROF_TXT" ]; then
+        G8_IN_PROF_TXT=$(ls -t ./input/g8_in_${prof_id}_*.txt 2>/dev/null | head -n1)
+    fi
+    
+    if [ -z "$G8_IN_MTDT" ]; then
+        G8_IN_MTDT=$(ls -t ./input/g8_in_${prof_id}_*.json 2>/dev/null | head -n1)
+    fi
 
     if [ ! -f "$G8_IN_PROF_TXT" ] || [ ! -f "$G8_IN_MTDT" ]; then
         echo " ! Error: One or both input files missing: $G8_IN_PROF_TXT or $G8_IN_MTDT"
         return 1
     fi
+    
+	# Validate
+		if [ ! -f "$G8_IN_PROF_TXT" ] || [ ! -f "$G8_IN_MTDT" ]; then
+			echo " ! Error: Missing files."
+			echo "   Lecture: $G8_IN_PROF_TXT"
+			echo "   Metadata: $G8_IN_MTDT"
+			return 1
+		fi
 
+    echo " + Using lecture file: $G8_IN_PROF_TXT"
+    echo " + Using metadata file: $G8_IN_MTDT"
+    
     # Read contents
     lecture_content=$(cat "$G8_IN_PROF_TXT")
     metadata_content=$(cat "$G8_IN_MTDT")

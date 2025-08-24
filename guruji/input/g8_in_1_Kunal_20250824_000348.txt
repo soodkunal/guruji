@@ -1,8 +1,0 @@
-What is AI? 
-Artificial Intelligence (AI) is the simulation of human intelligence in machines. It's a broad field of computer science focused on building smart machines capable of performing tasks that ypically require human intelligence, like learning, reasoning, and problem-solving.
-
-AI systems work by processing massive amounts of data and identifying patterns to make predictions. The core engine behind most modern AI is Machine Learning (ML).
-
-Machine Learning (ML): An approach where algorithms are "trained" on data to learn without being explicitly programmed. For example, by showing an ML model thousands of cat pictures, it learns to identify a cat on its own.
-
-Deep Learning (DL): A subset of ML that uses complex, multi-layered "neural networks" to solve more advanced problems, like recognizing speech or powering self-driving cars.
