@@ -314,9 +314,10 @@ function g8_elab_add_voice() {
     echo "Response: $response"
     
 	# Extract just the voice_id
-	voice_id=$(echo "$response" | jq -r '.voice_id // empty')
+	#voice_id=$(echo "$response" | jq -r '.voice_id // empty')
     #voice_id=$(echo "$response" | jq -r '.voice_id // empty')
-
+	voice_id=$(echo "$response" | grep -oP '"voice_id"\s*:\s*"\K[^"]+')
+	echo "$voice_id"
     if [ -z "$voice_id" ]; then
     echo "Error: Could not retrieve voice_id from API response."
     echo "Full Response: $response"
