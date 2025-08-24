@@ -953,9 +953,6 @@ function take_voice_id_entry_interactive() {
 }
 
 function g8_step2_gpt_conv_to_lecture(){
-	
-
-
     echo " + Step 2: Converting professor notes & metadata into a lecture using GPT"
     read -p "Enter Professor ID: " prof_id
 	
@@ -1040,6 +1037,86 @@ CREATE TABLE IF NOT EXISTS gpt_outputs (
 DELETE FROM gpt_outputs WHERE professor_id=$prof_id;
 INSERT INTO gpt_outputs (professor_id, gpt_file_path) VALUES ($prof_id, '$G8_OPS_GPT_TXT');
 EOF
+}
+
+g8_step3_conv_txt_to_wav() {
+    echo "  + Converting the lecture text into an audio file..."
+    read -p "Enter Professor ID: " prof_id
+
+    # Get professor name
+    prof_name=$(sqlite3 "$DB_FILE" "SELECT professor_name FROM professors WHERE professor_id=$prof_id;")
+    if [ -z "$prof_name" ]; then
+        echo "[ERROR] Professor ID $prof_id not found in database."
+        return 1
+    fi
+
+    # Get latest text file from DB
+    SRC_TXT=$(sqlite3 "$DB_FILE" "SELECT gpt_file_path FROM gpt_outputs WHERE professor_id=$prof_id ORDER BY created_at DESC LIMIT 1;")
+    if [ ! -f "$SRC_TXT" ]; then
+        echo "[ERROR] No lecture text found for Professor $prof_id ($prof_name). Run Step 2 first."
+        return 1
+    fi
+    echo "  + Using lecture text: $SRC_TXT"
+
+    # Get Voice ID
+    voice_id=$(sqlite3 "$DB_FILE" "SELECT voice_id FROM voice_ids WHERE professor_id=$prof_id;")
+    if [ -z "$voice_id" ]; then
+        echo "[ERROR] No Voice ID found for Professor $prof_id. Run the voice creation step first."
+        return 1
+    fi
+    echo "  + Using Voice ID: $voice_id"
+
+    # Output file (sanitize professor name to avoid spaces/quotes)
+    safe_name=$(echo "$prof_name" | tr ' ' '_' | tr -d '."'\'' )
+    G8_OPS_AUDIO_FILE="$G8_PROJ_DIR/ops/g8_ops_11lab_${prof_id}_${safe_name}_$(date +%Y%m%d_%H%M%S).wav"
+
+    # Escape text safely
+    SAFE_TEXT=$(jq -Rs . < "$SRC_TXT")
+
+    # Prepare payload JSON
+    REQ_JSON=$(jq -n --arg text "$(cat "$SRC_TXT")" \
+        '{text: $text, model_id: "eleven_multilingual_v2"}')
+
+    # Call ElevenLabs API
+    echo "  + Sending request to ElevenLabs..."
+    http_code=$(curl -s -w "%{http_code}" -o "$G8_OPS_AUDIO_FILE" \
+        -X POST "https://api.elevenlabs.io/v1/text-to-speech/$voice_id/stream" \
+        -H "xi-api-key: $G8_ELAB_KEY" \
+        -H "Content-Type: application/json" \
+        -H "Accept: audio/wav" \
+        -d "$REQ_JSON")
+
+    # Verify HTTP code
+    if [ "$http_code" -ne 200 ]; then
+        echo "[ERROR] ElevenLabs API request failed (HTTP $http_code)."
+        echo "DBG: Full response:"
+        curl -s -X POST "https://api.elevenlabs.io/v1/text-to-speech/$voice_id/stream" \
+            -H "xi-api-key: $G8_ELAB_KEY" \
+            -H "Content-Type: application/json" \
+            -d "$REQ_JSON"
+        rm -f "$G8_OPS_AUDIO_FILE"
+        return 1
+    fi
+
+    # Verify file type
+    if [ -s "$G8_OPS_AUDIO_FILE" ] && file "$G8_OPS_AUDIO_FILE" | grep -q "WAVE audio"; then
+        echo "  + Audio file saved: $G8_OPS_AUDIO_FILE"
+
+        # Store audio file path in DB
+        sqlite3 "$DB_FILE" <<EOF
+CREATE TABLE IF NOT EXISTS audio_outputs (
+    professor_id INTEGER,
+    file_path TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+DELETE FROM audio_outputs WHERE professor_id=$prof_id;
+INSERT INTO audio_outputs (professor_id, file_path) VALUES ($prof_id, '$G8_OPS_AUDIO_FILE');
+EOF
+    else
+        echo "[ERROR] File was not valid audio. Dumping first lines:"
+        head "$G8_OPS_AUDIO_FILE"
+        return 1
+    fi
 }
 
 
