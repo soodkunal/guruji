@@ -1042,7 +1042,7 @@ INSERT INTO gpt_outputs (professor_id, gpt_file_path) VALUES ($prof_id, '$G8_OPS
 EOF
 }
 
-function g8_step3_conv_txt_to_wav() {
+g8_step3_conv_txt_to_wav() {
     echo "  + Converting the lecture text into an audio file..."
     read -p "Enter Professor ID: " prof_id
 
@@ -1069,31 +1069,44 @@ function g8_step3_conv_txt_to_wav() {
     fi
     echo "  + Using Voice ID: $voice_id"
 
-    # Output file
-    G8_OPS_AUDIO_FILE="$G8_PROJ_DIR/ops/g8_ops_11lab_${prof_id}_${prof_name}_$(date +%Y%m%d_%H%M%S).wav"
+    # Output file (sanitize professor name to avoid spaces/quotes)
+    safe_name=$(echo "$prof_name" | tr ' ' '_' | tr -d '."'\'' )
+    G8_OPS_AUDIO_FILE="$G8_PROJ_DIR/ops/g8_ops_11lab_${prof_id}_${safe_name}_$(date +%Y%m%d_%H%M%S).wav"
 
     # Escape text safely
     SAFE_TEXT=$(jq -Rs . < "$SRC_TXT")
 
-    # Call ElevenLabs API and stream audio directly
+    # Prepare payload JSON
+    REQ_JSON=$(jq -n --arg text "$(cat "$SRC_TXT")" \
+        '{text: $text, model_id: "eleven_multilingual_v2"}')
+
+    # Call ElevenLabs API
     echo "  + Sending request to ElevenLabs..."
-    curl -s -X POST "https://api.elevenlabs.io/v1/text-to-speech/$voice_id/stream" \
+    http_code=$(curl -s -w "%{http_code}" -o "$G8_OPS_AUDIO_FILE" \
+        -X POST "https://api.elevenlabs.io/v1/text-to-speech/$voice_id/stream" \
         -H "xi-api-key: $G8_ELAB_KEY" \
         -H "Content-Type: application/json" \
         -H "Accept: audio/wav" \
-        -data "{
-                  \"text\": $SAFE_TEXT,
-                  \"model_id\": \"eleven_multilingual_v2\"
-                }" \
-        -o "$G8_OPS_AUDIO_FILE"
+        -d "$REQ_JSON")
 
-    # Verify success
-    if [ -s "$G8_OPS_AUDIO_FILE" ]; then
-        if file "$G8_OPS_AUDIO_FILE" | grep -q "WAVE audio"; then
-            echo "  + Audio file saved: $G8_OPS_AUDIO_FILE"
+    # Verify HTTP code
+    if [ "$http_code" -ne 200 ]; then
+        echo "[ERROR] ElevenLabs API request failed (HTTP $http_code)."
+        echo "DBG: Full response:"
+        curl -s -X POST "https://api.elevenlabs.io/v1/text-to-speech/$voice_id/stream" \
+            -H "xi-api-key: $G8_ELAB_KEY" \
+            -H "Content-Type: application/json" \
+            -d "$REQ_JSON"
+        rm -f "$G8_OPS_AUDIO_FILE"
+        return 1
+    fi
 
-            # Store audio file path in DB
-            sqlite3 "$DB_FILE" <<EOF
+    # Verify file type
+    if [ -s "$G8_OPS_AUDIO_FILE" ] && file "$G8_OPS_AUDIO_FILE" | grep -q "WAVE audio"; then
+        echo "  + Audio file saved: $G8_OPS_AUDIO_FILE"
+
+        # Store audio file path in DB
+        sqlite3 "$DB_FILE" <<EOF
 CREATE TABLE IF NOT EXISTS audio_outputs (
     professor_id INTEGER,
     file_path TEXT,
@@ -1102,14 +1115,9 @@ CREATE TABLE IF NOT EXISTS audio_outputs (
 DELETE FROM audio_outputs WHERE professor_id=$prof_id;
 INSERT INTO audio_outputs (professor_id, file_path) VALUES ($prof_id, '$G8_OPS_AUDIO_FILE');
 EOF
-
-        else
-            echo "[ERROR] File was saved but is not valid audio:"
-            head "$G8_OPS_AUDIO_FILE"
-            return 1
-        fi
     else
-        echo "[ERROR] File was empty even after saving. Something went wrong."
+        echo "[ERROR] File was not valid audio. Dumping first lines:"
+        head "$G8_OPS_AUDIO_FILE"
         return 1
     fi
 }
