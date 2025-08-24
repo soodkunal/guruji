@@ -975,7 +975,6 @@ function g8_step2_gpt_conv_to_lecture(){
 	if [ -z "$G8_IN_PROF_TXT" ]; then
 		G8_IN_PROF_TXT=$(ls -t ./input/g8_in_${prof_id}_*.txt 2>/dev/null | head -n1)
 	fi
-	
 	if [ -z "$G8_IN_MTDT" ]; then
 		G8_IN_MTDT=$(ls -t ./input/g8_in_${prof_id}_*.json 2>/dev/null | head -n1)
 	fi
@@ -1026,11 +1025,11 @@ function g8_step2_gpt_conv_to_lecture(){
 
     # Extract GPT reply
     RESPONSE_TEXT=$(echo "$RESPONSE" | jq -r '.choices[0].message.content // "Error: No content returned from GPT."')
-	
+
     # Save to file
     echo "$RESPONSE_TEXT" > "$G8_OPS_GPT_TXT"
     echo " + Lecture saved to: $G8_OPS_GPT_TXT"
-	
+
     # Save filename in DB (latest lecture for professor)
     sqlite3 "$DB_FILE" <<EOF
 CREATE TABLE IF NOT EXISTS gpt_outputs (
