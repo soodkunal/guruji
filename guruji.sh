@@ -1081,7 +1081,7 @@ function g8_step3_conv_txt_to_wav() {
         -H "xi-api-key: $G8_ELAB_KEY" \
         -H "Content-Type: application/json" \
         -H "Accept: audio/wav" \
-        --data "{
+        -data "{
                   \"text\": $SAFE_TEXT,
                   \"model_id\": \"eleven_multilingual_v2\"
                 }" \
