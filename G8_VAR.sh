@@ -75,13 +75,26 @@
 
 		# Generate timestamp for unique file naming
 		timestamp=$(date +%Y%m%d_%H%M%S)
+		# =======================
+		# Timestamp Handling
+		# =======================
 
+		TS_FILE=".guruji_run_ts"
+
+		if [ -f "$TS_FILE" ]; then
+			export TIMESTAMP=$(cat "$TS_FILE")
+			echo "[DEBUG] Using existing run timestamp: $TIMESTAMP"
+		else
+			export TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+			echo "$TIMESTAMP" > "$TS_FILE"
+			echo "[DEBUG] Generated new run timestamp: $TIMESTAMP"
+		fi
 		# Define ALL file paths
-		export G8_IN_PROF_TXT="${G8_PROJ_DIR}/input/g8_in_${G8_PROF_ID}_${G8_PROF_NAME}_${timestamp}.txt"
-		export G8_IN_MTDT="${G8_PROJ_DIR}/input/g8_in_${G8_PROF_ID}_${G8_PROF_NAME}_${timestamp}.json"
-		export G8_OPS_GPT_TXT="${G8_PROJ_DIR}/ops/g8_ops_gpt_${G8_PROF_ID}_${G8_PROF_NAME}_${timestamp}.txt"
-		export G8_OPS_AUDIO_FILE="${G8_PROJ_DIR}/ops/g8_ops_11lab_${G8_PROF_ID}_${G8_PROF_NAME}_${timestamp}.wav"
-		export G8_OUTPUT_LECTURE_FILE="${G8_PROJ_DIR}/out/g8_out_${G8_PROF_ID}_${G8_PROF_NAME}_${timestamp}.mp4"
+		export G8_IN_PROF_TXT="${G8_PROJ_DIR}/input/g8_in_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.txt"
+		export G8_IN_MTDT="${G8_PROJ_DIR}/input/g8_in_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.json"
+		export G8_OPS_GPT_TXT="${G8_PROJ_DIR}/ops/g8_ops_gpt_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.txt"
+		export G8_OPS_AUDIO_FILE="${G8_PROJ_DIR}/ops/g8_ops_11lab_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.wav"
+		export G8_OUTPUT_LECTURE_FILE="${G8_PROJ_DIR}/out/g8_out_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.mp4"
 
 		echo "  + File paths initialized successfully."
 		# ==== PROFESSOR LOGIC ENDS HERE ====

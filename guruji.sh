@@ -886,8 +886,8 @@ function g8_step1_get_from_prof() {
     fi
     
      # Export so other steps can use
-    export G8_IN_PROF_TXT="$G8_PROJ_DIR/input/g8_in_${G8_PROF_ID}_${G8_PROF_NAME}_${G8_RUN_TS}.txt"
-    export G8_IN_MTDT="$G8_PROJ_DIR/input/g8_in_${G8_PROF_ID}_${G8_PROF_NAME}_${G8_RUN_TS}.json"
+    export G8_IN_PROF_TXT="$G8_PROJ_DIR/input/g8_in_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.txt"
+    export G8_IN_MTDT="$G8_PROJ_DIR/input/g8_in_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.json"
 }
 
 function take_professor_entry_interactive() {
@@ -980,8 +980,8 @@ function g8_step2_gpt_conv_to_lecture(){
     fi
 
     # Auto-pick using current run timestamp (no ls -t)
-    G8_IN_PROF_TXT="$G8_PROJ_DIR/input/g8_in_${prof_id}_${prof_name}_${G8_RUN_TS}.txt"
-    G8_IN_MTDT="$G8_PROJ_DIR/input/g8_in_${prof_id}_${prof_name}_${G8_RUN_TS}.json"
+    G8_IN_PROF_TXT="$G8_PROJ_DIR/input/g8_in_${prof_id}_${prof_name}_${TIMESTAMP}.txt"
+    G8_IN_MTDT="$G8_PROJ_DIR/input/g8_in_${prof_id}_${prof_name}_${TIMESTAMP}.json"
 
     # Allow user override if needed
     read -e -p "Enter lecture text file path (or press Enter to auto-pick with timestamp): " input_txt
@@ -1006,7 +1006,7 @@ function g8_step2_gpt_conv_to_lecture(){
     FULL_INPUT="Lecture Content:\n$lecture_content\n\nMetadata:\n$metadata_content"
 
     # Output filename
-    G8_OPS_GPT_TXT="$G8_PROJ_DIR/ops/g8_ops_gpt_${prof_id}_${prof_name}_${G8_RUN_TS}.txt"
+    G8_OPS_GPT_TXT="$G8_PROJ_DIR/ops/g8_ops_gpt_${prof_id}_${prof_name}_${TIMESTAMP}.txt"
 
     # JSON payload for GPT
     JSON_PAYLOAD=$(jq -n \
@@ -1074,7 +1074,7 @@ function g8_step3_conv_txt_to_wav() {
     echo "  + Using Voice ID: $voice_id"
 
     # Output file
-    G8_OPS_AUDIO_FILE="$G8_PROJ_DIR/ops/g8_ops_11lab_${prof_id}_${prof_name}_${G8_RUN_TS}.wav"
+    G8_OPS_AUDIO_FILE="$G8_PROJ_DIR/ops/g8_ops_11lab_${prof_id}_${prof_name}_${TIMESTAMP}.wav"
 
     # Escape text safely
     SAFE_TEXT=$(jq -Rs . < "$SRC_TXT")
@@ -1297,16 +1297,6 @@ if [ -f .env ]; then
 fi
 
 source G8_VAR.sh
-
-# Initialize / reuse run timestamp
-if [ -f ".guruji_run_ts" ]; then
-    export G8_RUN_TS=$(cat .guruji_run_ts)
-else
-    export G8_RUN_TS=$(date +"%Y%m%d_%H%M%S")
-    echo $G8_RUN_TS > .guruji_run_ts
-fi
-
-echo "[DEBUG] Using run timestamp: $G8_RUN_TS"
 
 # Check if an argument is provided
 if [ -z "$1" ]; then
