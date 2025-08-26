@@ -872,6 +872,10 @@ function g8_step1_get_from_prof() {
     else
         echo " ! Error: Metadata file not found after download."
     fi
+    
+     # Export so other steps can use
+    export G8_IN_PROF_TXT="$G8_PROJ_DIR/input/g8_in_${G8_PROF_ID}_${G8_PROF_NAME}_${G8_RUN_TS}.txt"
+    export G8_IN_MTDT="$G8_PROJ_DIR/input/g8_in_${G8_PROF_ID}_${G8_PROF_NAME}_${G8_RUN_TS}.json"
 }
 
 function take_professor_entry_interactive() {
