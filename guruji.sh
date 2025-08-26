@@ -1049,6 +1049,9 @@ EOF
 function g8_step3_conv_txt_to_wav() {
     echo "  + Converting the lecture text into an audio file..."
     read -p "Enter Professor ID: " prof_id
+    
+    echo "Using Key"
+	echo $G8_ELAB_KEY
 
     # Get professor name
     prof_name=$(sqlite3 "$DB_FILE" "SELECT professor_name FROM professors WHERE professor_id=$prof_id;")
