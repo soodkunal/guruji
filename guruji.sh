@@ -957,9 +957,6 @@ function take_voice_id_entry_interactive() {
 }
 
 function g8_step2_gpt_conv_to_lecture(){
-	
-
-
     echo " + Step 2: Converting professor notes & metadata into a lecture using GPT"
     read -p "Enter Professor ID: " prof_id
 	
@@ -970,32 +967,23 @@ function g8_step2_gpt_conv_to_lecture(){
         return 1
     fi
 
-    # Input files (created in Step 1)
-	# Ask user for file paths
-    read -e -p "Enter lecture text file path (or press Enter to auto-pick latest): " G8_IN_PROF_TXT
-    read -e -p "Enter metadata JSON file path (or press Enter to auto-pick latest): " G8_IN_MTDT
+    # Auto-pick using current run timestamp (no ls -t)
+    G8_IN_PROF_TXT="$G8_PROJ_DIR/input/g8_in_${prof_id}_${prof_name}_${G8_RUN_TS}.txt"
+    G8_IN_MTDT="$G8_PROJ_DIR/input/g8_in_${prof_id}_${prof_name}_${G8_RUN_TS}.json"
 
-	# Auto-pick latest if empty
-	if [ -z "$G8_IN_PROF_TXT" ]; then
-		G8_IN_PROF_TXT=$(ls -t ./input/g8_in_${prof_id}_*.txt 2>/dev/null | head -n1)
-	fi
-	if [ -z "$G8_IN_MTDT" ]; then
-		G8_IN_MTDT=$(ls -t ./input/g8_in_${prof_id}_*.json 2>/dev/null | head -n1)
-	fi
+    # Allow user override if needed
+    read -e -p "Enter lecture text file path (or press Enter to auto-pick with timestamp): " input_txt
+    read -e -p "Enter metadata JSON file path (or press Enter to auto-pick with timestamp): " input_mtdt
+    [ -n "$input_txt" ] && G8_IN_PROF_TXT="$input_txt"
+    [ -n "$input_mtdt" ] && G8_IN_MTDT="$input_mtdt"
 
-
+    # Validate files
     if [ ! -f "$G8_IN_PROF_TXT" ] || [ ! -f "$G8_IN_MTDT" ]; then
-        echo " ! Error: One or both input files missing: $G8_IN_PROF_TXT or $G8_IN_MTDT"
+        echo " ! Error: Missing input files."
+        echo "   Lecture: $G8_IN_PROF_TXT"
+        echo "   Metadata: $G8_IN_MTDT"
         return 1
     fi
-    
-	# Validate
-		if [ ! -f "$G8_IN_PROF_TXT" ] || [ ! -f "$G8_IN_MTDT" ]; then
-			echo " ! Error: Missing files."
-			echo "   Lecture: $G8_IN_PROF_TXT"
-			echo "   Metadata: $G8_IN_MTDT"
-			return 1
-		fi
 
     echo " + Using lecture file: $G8_IN_PROF_TXT"
     echo " + Using metadata file: $G8_IN_MTDT"
@@ -1034,7 +1022,7 @@ function g8_step2_gpt_conv_to_lecture(){
     echo "$RESPONSE_TEXT" > "$G8_OPS_GPT_TXT"
     echo " + Lecture saved to: $G8_OPS_GPT_TXT"
 
-    # Save filename in DB (latest lecture for professor)
+    # Save filename in DB
     sqlite3 "$DB_FILE" <<EOF
 CREATE TABLE IF NOT EXISTS gpt_outputs (
     professor_id INTEGER,
