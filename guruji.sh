@@ -1083,34 +1083,15 @@ function g8_step3_conv_txt_to_wav() {
     echo "  + Sending request to ElevenLabs..."
     SAFE_TEXT=$(jq -Rs . < "$SRC_TXT")
 
-	#curl -s -X POST "https://api.elevenlabs.io/v1/text-to-speech/$voice_id" \
-    #    -H "xi-api-key: $G8_ELAB_KEY" \
-    #    -H "Content-Type: application/json" \
-    #    -o "$G8_OPS_AUDIO_FILE" \
-    #    -d "{
-    #          \"text\": $SAFE_TEXT,
-     #         \"voice_settings\": { \"stability\": 0.5, \"similarity_boost\": 0.8 },
-      #        \"model_id\": \"eleven_multilingual_v2\"
-       #     }"
-       
-       echo "[DEBUG] ElevenLabs API Key: ${G8_ELAB_KEY:0:6}******"
-		echo "[DEBUG] Requesting audio from ElevenLabs..."
-
-		HTTP_CODE=$(curl -sS -w "%{http_code}" -o "$OUT_FILE" \
-		  -X POST "https://api.elevenlabs.io/v1/text-to-speech/$voice_id" \
-		  -H "xi-api-key: $G8_ELAB_KEY" \
-		  -H "Accept: audio/mpeg" \
-		  -H "Content-Type: application/json" \
-		  -d "{\"text\": \"$TEXT\"}")
-
-		if [ "$HTTP_CODE" -ne 200 ]; then
-		  echo "[ERROR] ElevenLabs request failed with HTTP $HTTP_CODE"
-		  echo "[ERROR] Response:"
-		  cat "$OUT_FILE"
-		  return 1
-		fi
-
-
+	curl -s -X POST "https://api.elevenlabs.io/v1/text-to-speech/$voice_id" \
+        -H "xi-api-key: $G8_ELAB_KEY" \
+        -H "Content-Type: application/json" \
+        -o "$G8_OPS_AUDIO_FILE" \
+        -d "{
+              \"text\": $SAFE_TEXT,
+              \"voice_settings\": { \"stability\": 0.5, \"similarity_boost\": 0.8 },
+              \"model_id\": \"eleven_multilingual_v2\"
+            }"
 	
     # Verify success
     if [ -s "$G8_OPS_AUDIO_FILE" ]; then
