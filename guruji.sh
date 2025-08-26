@@ -96,6 +96,18 @@ function ensure_sqlite() {
     fi
 }
 
+function g8_clear_timestamp() {
+    echo " + Step clear_timestamp: Cleanup timestamp for fresh runs"
+
+    if [ -f ".guruji_run_ts" ]; then
+        rm .guruji_run_ts
+        echo "[DEBUG] Cleared run timestamp (.guruji_run_ts) for next execution."
+    else
+        echo "[INFO] No .guruji_run_ts file found. Nothing to clear."
+    fi
+}
+
+
 # ------------------- Database Setup -------------------
 function setup_database() {
     g8_banner
@@ -1371,6 +1383,9 @@ case "$1" in
     -elab_del_voice)
         g8_elab_del_voice
         ;;
+    -clear_time)
+		g8_clear_timestamp
+		;;
     -help)
         g8_help
         ;;
