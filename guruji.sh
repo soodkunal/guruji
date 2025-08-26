@@ -1069,23 +1069,17 @@ function g8_step3_conv_txt_to_wav() {
 
     # Call ElevenLabs API and stream audio directly
     echo "  + Sending request to ElevenLabs..."
-    resp=$(curl -s -w "%{http_code}" -X POST "https://api.elevenlabs.io/v1/text-to-speech/$voice_id/stream" \
-    -H "xi-api-key: $G8_ELAB_KEY" \
-    -H "Content-Type: application/json" \
-    -H "Accept: audio/wav" \
-    -d "{
-          \"text\": $SAFE_TEXT,
-          \"model_id\": \"eleven_multilingual_v2\"
-        }" \
-    -o "$G8_OPS_AUDIO_FILE")
+    SAFE_TEXT=$(jq -Rs . < "$SRC_TXT")
 
-	if [ "$resp" -ne 200 ]; then
-		echo "[ERROR] ElevenLabs API failed with HTTP $resp"
-		echo "Response:"
-		cat "$G8_OPS_AUDIO_FILE"
-		rm -f "$G8_OPS_AUDIO_FILE"
-		return 1
-	fi
+	curl -s -X POST "https://api.elevenlabs.io/v1/text-to-speech/$voice_id" \
+	  -H "xi-api-key: $G8_ELAB_KEY" \
+	  -H "Content-Type: application/json" \
+	  -o "$G8_OPS_AUDIO_FILE" \
+	  -d "{
+			\"text\": $SAFE_TEXT,
+			\"voice_settings\": { \"stability\": 0.5, \"similarity_boost\": 0.8 },
+			\"model_id\": \"eleven_multilingual_v2\"
+		  }"
 
 
     # Verify success
