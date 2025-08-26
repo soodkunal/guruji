@@ -1290,10 +1290,15 @@ fi
 
 source G8_VAR.sh
 
-# Generate one timestamp for the whole run
-if [ -z "$G8_RUN_TS" ]; then
+# Initialize / reuse run timestamp
+if [ -f ".guruji_run_ts" ]; then
+    export G8_RUN_TS=$(cat .guruji_run_ts)
+else
     export G8_RUN_TS=$(date +"%Y%m%d_%H%M%S")
+    echo $G8_RUN_TS > .guruji_run_ts
 fi
+
+echo "[DEBUG] Using run timestamp: $G8_RUN_TS"
 
 # Check if an argument is provided
 if [ -z "$1" ]; then
@@ -1354,6 +1359,11 @@ case "$1" in
         g8_run_prog
         g8_chk_fl "$G8_OUTPUT_LECTURE_FILE"
         echo "  + Final video file stored in $G8_OUTPUT_LECTURE_FILE"
+        # Cleanup timestamp for fresh runs
+		if [ -f ".guruji_run_ts" ]; then
+			rm .guruji_run_ts
+			echo "[DEBUG] Cleared run timestamp (.guruji_run_ts) for next execution."
+		fi
         ;;
     -do_step5|-B_step_5)
         echo "  + Playing the final created file $G8_OUTPUT_LECTURE_FILE"
