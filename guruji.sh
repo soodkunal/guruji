@@ -1139,7 +1139,14 @@ function g8_run_prog() {
     # Get user input for video and audio paths
     read -p "Please enter the path to the video sample (e.g., face.mp4): " G8_IN_SAMPLE_VID
     read -p "Please enter the path to the audio sample (e.g., output.mp3): " G8_OPS_AUDIO_FILE
-    read -p "Please enter the path for final output (e.g., lecture.mp4): " G8_OUTPUT_LECTURE_FILE
+    read -p "Please enter the path for final output [default: $DEFAULT_OUTPUT]: " G8_OUTPUT_LECTURE_FILE
+	
+	# If user pressed Enter, use default
+	if [ -z "$G8_OUTPUT_LECTURE_FILE" ]; then
+		G8_OUTPUT_LECTURE_FILE="$DEFAULT_OUTPUT"
+	fi
+
+	export G8_OUTPUT_LECTURE_FILE
 
     # Validate input files
     if [[ ! -f "$G8_IN_SAMPLE_VID" ]]; then
@@ -1150,9 +1157,6 @@ function g8_run_prog() {
         echo " ! Error: Audio sample '$G8_OPS_AUDIO_FILE' not found."
         return 1
     fi
-
-    # Export output variable for external use
-    export G8_OUTPUT_LECTURE_FILE
 
     # Move to the inference directory
     echo " + Changing directory to video retalking project: $G8_VT_DIR"

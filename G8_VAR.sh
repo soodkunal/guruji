@@ -94,7 +94,7 @@
 		export G8_IN_MTDT="${G8_PROJ_DIR}/input/g8_in_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.json"
 		export G8_OPS_GPT_TXT="${G8_PROJ_DIR}/ops/g8_ops_gpt_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.txt"
 		export G8_OPS_AUDIO_FILE="${G8_PROJ_DIR}/ops/g8_ops_11lab_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.wav"
-		export G8_OUTPUT_LECTURE_FILE="${G8_PROJ_DIR}/out/g8_out_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.mp4"
+		export DEFAULT_OUTPUT="${G8_PROJ_DIR}/out/g8_out_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.mp4"
 
 		echo "  + File paths initialized successfully."
 		# ==== PROFESSOR LOGIC ENDS HERE ====
