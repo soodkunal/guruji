@@ -1147,6 +1147,7 @@ function g8_run_prog() {
 	fi
 
 	export G8_OUTPUT_LECTURE_FILE
+	touch "$G8_OUTPUT_LECTURE_FILE"
 
     # Validate input files
     if [[ ! -f "$G8_IN_SAMPLE_VID" ]]; then
