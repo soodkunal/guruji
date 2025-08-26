@@ -1074,7 +1074,7 @@ function g8_step3_conv_txt_to_wav() {
     echo "  + Using Voice ID: $voice_id"
 
     # Output file
-    G8_OPS_AUDIO_FILE="$G8_PROJ_DIR/ops/g8_ops_11lab_${prof_id}_${prof_name}_${TIMESTAMP}.wav"
+    #G8_OPS_AUDIO_FILE="$G8_PROJ_DIR/ops/g8_ops_11lab_${prof_id}_${prof_name}_${TIMESTAMP}.wav"
 
     # Escape text safely
     SAFE_TEXT=$(jq -Rs . < "$SRC_TXT")
