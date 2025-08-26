@@ -1083,16 +1083,30 @@ function g8_step3_conv_txt_to_wav() {
 	
 	
 
-    # Validate output
-    if [ ! -s "$G8_OPS_AUDIO_FILE" ]; then
-        echo "[ERROR] File was empty even after saving. Something went wrong."
-        echo "   + Checking for $G8_OPS_AUDIO_FILE"
-        # Print response (in case it's JSON error)
-        echo "   + Response from ElevenLabs:"
-        cat "$G8_OPS_AUDIO_FILE"
-        return 1
+    # Verify success
+    if [ -s "$G8_OPS_AUDIO_FILE" ]; then
+        if file "$G8_OPS_AUDIO_FILE" | grep -q "WAVE audio"; then
+            echo "  + Audio file saved: $G8_OPS_AUDIO_FILE"
+
+            # Store audio file path in DB
+            sqlite3 "$DB_FILE" <<EOF
+CREATE TABLE IF NOT EXISTS audio_outputs (
+    professor_id INTEGER,
+    file_path TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+DELETE FROM audio_outputs WHERE professor_id=$prof_id;
+INSERT INTO audio_outputs (professor_id, file_path) VALUES ($prof_id, '$G8_OPS_AUDIO_FILE');
+EOF
+
+        else
+            echo "[ERROR] File was saved but is not valid audio:"
+            head "$G8_OPS_AUDIO_FILE"
+            return 1
+        fi
     else
-        echo "  + Audio generated successfully: $G8_OPS_AUDIO_FILE"
+        echo "[ERROR] File was empty even after saving. Something went wrong."
+        return 1
     fi
 }
 

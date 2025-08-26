@@ -1,0 +1,11 @@
+{
+  "audience_type": "School",
+  "age": "10-15",
+  "gender": "both",
+  "language": "English",
+  "stream": "Science",
+  "substream": "Physics",
+  "ambience": "classroom",
+  "delivery": "slide-deck",
+  "culture": "Indian"
+}
