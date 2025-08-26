@@ -1138,7 +1138,7 @@ function g8_run_prog() {
 
     # Get user input for video and audio paths
     read -p "Please enter the path to the video sample (e.g., face.mp4): " G8_IN_SAMPLE_VID
-    read -p "Please enter the path to the audio sample (e.g., output.mp3): " G8_OPS_AUDIO_FILE
+    read -p "Please enter the path to the audio sample (e.g., output.wav): " G8_OPS_AUDIO_FILE
     read -p "Please enter the path for final output [default: $DEFAULT_OUTPUT]: " G8_OUTPUT_LECTURE_FILE
 	
 	# If user pressed Enter, use default
