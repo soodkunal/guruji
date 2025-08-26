@@ -1002,7 +1002,7 @@ function g8_step2_gpt_conv_to_lecture(){
     FULL_INPUT="Lecture Content:\n$lecture_content\n\nMetadata:\n$metadata_content"
 
     # Output filename
-    G8_OPS_GPT_TXT="$G8_PROJ_DIR/ops/g8_ops_gpt_${prof_id}_${prof_name}_$(date +%Y%m%d_%H%M%S).txt"
+    G8_OPS_GPT_TXT="$G8_PROJ_DIR/ops/g8_ops_gpt_${prof_id}_${prof_name}_${G8_RUN_TS}.txt"
 
     # JSON payload for GPT
     JSON_PAYLOAD=$(jq -n \
@@ -1070,7 +1070,7 @@ function g8_step3_conv_txt_to_wav() {
     echo "  + Using Voice ID: $voice_id"
 
     # Output file
-    G8_OPS_AUDIO_FILE="$G8_PROJ_DIR/ops/g8_ops_11lab_${prof_id}_${prof_name}_$(date +%Y%m%d_%H%M%S).wav"
+    G8_OPS_AUDIO_FILE="$G8_PROJ_DIR/ops/g8_ops_11lab_${prof_id}_${prof_name}_${G8_RUN_TS}.wav"
 
     # Escape text safely
     SAFE_TEXT=$(jq -Rs . < "$SRC_TXT")
@@ -1289,6 +1289,11 @@ if [ -f .env ]; then
 fi
 
 source G8_VAR.sh
+
+# Generate one timestamp for the whole run
+if [ -z "$G8_RUN_TS" ]; then
+    export G8_RUN_TS=$(date +"%Y%m%d_%H%M%S")
+fi
 
 # Check if an argument is provided
 if [ -z "$1" ]; then
