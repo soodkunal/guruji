@@ -1081,7 +1081,9 @@ function g8_step3_conv_txt_to_wav() {
               \"model_id\": \"eleven_multilingual_v2\"
             }"
 	
-	# Validate output
+	
+
+    # Validate output
     if [ ! -s "$G8_OPS_AUDIO_FILE" ]; then
         echo "[ERROR] File was empty even after saving. Something went wrong."
         echo "   + Checking for $G8_OPS_AUDIO_FILE"
@@ -1091,27 +1093,6 @@ function g8_step3_conv_txt_to_wav() {
         return 1
     else
         echo "  + Audio generated successfully: $G8_OPS_AUDIO_FILE"
-    fi
-    
-            # Store audio file path in DB
-            sqlite3 "$DB_FILE" <<EOF
-CREATE TABLE IF NOT EXISTS audio_outputs (
-    professor_id INTEGER,
-    file_path TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-DELETE FROM audio_outputs WHERE professor_id=$prof_id;
-INSERT INTO audio_outputs (professor_id, file_path) VALUES ($prof_id, '$G8_OPS_AUDIO_FILE');
-EOF
-
-        else
-            echo "[ERROR] File was saved but is not valid audio:"
-            head "$G8_OPS_AUDIO_FILE"
-            return 1
-        fi
-    else
-        echo "[ERROR] File was empty even after saving. Something went wrong."
-        return 1
     fi
 }
 
