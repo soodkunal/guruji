@@ -1072,21 +1072,27 @@ function g8_step3_conv_txt_to_wav() {
     SAFE_TEXT=$(jq -Rs . < "$SRC_TXT")
 
 	curl -s -X POST "https://api.elevenlabs.io/v1/text-to-speech/$voice_id" \
-	  -H "xi-api-key: $G8_ELAB_KEY" \
-	  -H "Content-Type: application/json" \
-	  -o "$G8_OPS_AUDIO_FILE" \
-	  -d "{
-			\"text\": $SAFE_TEXT,
-			\"voice_settings\": { \"stability\": 0.5, \"similarity_boost\": 0.8 },
-			\"model_id\": \"eleven_multilingual_v2\"
-		  }"
-
-
-    # Verify success
-    if [ -s "$G8_OPS_AUDIO_FILE" ]; then
-        if file "$G8_OPS_AUDIO_FILE" | grep -q "WAVE audio"; then
-            echo "  + Audio file saved: $G8_OPS_AUDIO_FILE"
-
+        -H "xi-api-key: $G8_ELAB_KEY" \
+        -H "Content-Type: application/json" \
+        -o "$G8_OPS_AUDIO_FILE" \
+        -d "{
+              \"text\": $SAFE_TEXT,
+              \"voice_settings\": { \"stability\": 0.5, \"similarity_boost\": 0.8 },
+              \"model_id\": \"eleven_multilingual_v2\"
+            }"
+	
+	# Validate output
+    if [ ! -s "$G8_OPS_AUDIO_FILE" ]; then
+        echo "[ERROR] File was empty even after saving. Something went wrong."
+        echo "   + Checking for $G8_OPS_AUDIO_FILE"
+        # Print response (in case it's JSON error)
+        echo "   + Response from ElevenLabs:"
+        cat "$G8_OPS_AUDIO_FILE"
+        return 1
+    else
+        echo "  + Audio generated successfully: $G8_OPS_AUDIO_FILE"
+    fi
+    
             # Store audio file path in DB
             sqlite3 "$DB_FILE" <<EOF
 CREATE TABLE IF NOT EXISTS audio_outputs (
