@@ -1286,7 +1286,7 @@ print(response.choices[0].message.content.strip())
 
     # 9. Resume original lecture
     echo " + Resuming original lecture..."
-    vlc "$G8_ORIG_VIDEO"
+    cvlc "$G8_ORIG_VIDEO"
 }
 
 # =================================================================
