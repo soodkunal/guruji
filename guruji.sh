@@ -872,18 +872,18 @@ function take_voice_id_entry_interactive() {
 
 function g8_step2_gpt_conv_to_lecture(){
     echo " + Step 2: Converting professor notes & metadata into a lecture using GPT"
-    read -p "Enter Professor ID: " prof_id
+   # read -p "Enter Professor ID: " prof_id
 	
     # Fetch professor name from DB
-    prof_name=$(sqlite3 "$DB_FILE" "SELECT professor_name FROM professors WHERE professor_id=$prof_id;")
-    if [ -z "$prof_name" ]; then
+    #prof_name=$(sqlite3 "$DB_FILE" "SELECT professor_name FROM professors WHERE professor_id=$prof_id;")
+    if [ -z "$G8_PROF_NAME" ]; then
         echo "[ERROR] Professor ID $prof_id not found in database."
         return 1
     fi
 
     # Auto-pick using current run timestamp (no ls -t)
-    G8_IN_PROF_TXT="$G8_PROJ_DIR/input/g8_in_${prof_id}_${prof_name}_${TIMESTAMP}.txt"
-    G8_IN_MTDT="$G8_PROJ_DIR/input/g8_in_${prof_id}_${prof_name}_${TIMESTAMP}.json"
+    G8_IN_PROF_TXT="$G8_PROJ_DIR/input/g8_in_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.txt"
+    G8_IN_MTDT="$G8_PROJ_DIR/input/g8_in_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.json"
 
     # Allow user override if needed
     read -e -p "Enter lecture text file path (or press Enter to auto-pick with timestamp): " input_txt
@@ -908,7 +908,7 @@ function g8_step2_gpt_conv_to_lecture(){
     FULL_INPUT="Lecture Content:\n$lecture_content\n\nMetadata:\n$metadata_content"
 
     # Output filename
-    G8_OPS_GPT_TXT="$G8_PROJ_DIR/ops/g8_ops_gpt_${prof_id}_${prof_name}_${TIMESTAMP}.txt"
+    G8_OPS_GPT_TXT="$G8_PROJ_DIR/ops/g8_ops_gpt_${prof_id}_${G8_PROF_NAME}_${TIMESTAMP}.txt"
 
     # JSON payload for GPT
     JSON_PAYLOAD=$(jq -n \
@@ -943,8 +943,8 @@ CREATE TABLE IF NOT EXISTS gpt_outputs (
     gpt_file_path TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
-DELETE FROM gpt_outputs WHERE professor_id=$prof_id;
-INSERT INTO gpt_outputs (professor_id, gpt_file_path) VALUES ($prof_id, '$G8_OPS_GPT_TXT');
+DELETE FROM gpt_outputs WHERE professor_id=$G8_PROF_ID;
+INSERT INTO gpt_outputs (professor_id, gpt_file_path) VALUES ($G8_PROF_ID, '$G8_OPS_GPT_TXT');
 EOF
 }
 
