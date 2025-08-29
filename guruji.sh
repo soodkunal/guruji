@@ -110,7 +110,6 @@ function g8_clear_timestamp() {
 
 # ------------------- Database Setup -------------------
 function setup_database() {
-    g8_banner
     ensure_sqlite
 
     echo " + Initializing database at: $DB_FILE"
@@ -655,98 +654,6 @@ function g8_get_checkpoints(){
     echo "Check video and audio samples in the respective directories."
 }
 
-function g8_clone_base_audio_file(){
-    # This script createsone time audio file for a given professor file
-    # This is created on eleven labs and returns the audio file library ID
-    # The audio file will be used to generate the final
-    # Lecture file in the respective professor name
-    echo "  + Now creating clone base file for a professor"
-    # Set up G8_HOME if not already defined
-    
-    # Step 1: Check if DB file exists, create if not
-    if [ ! -f "$DB_FILE" ]; then
-        echo "Database file not found. Creating a new one."
-        mkdir -p "$(dirname "$DB_FILE")" || { echo "Error creating directory"; exit 1; }
-        echo "$HEADER" > "$DB_FILE"
-    fi
-
-    # Step 2: Request and validate unique prof_id
-    while true; do
-        read -rp "Enter prof_id: " prof_id
-        prof_id="${prof_id//[ -;]/}"  # Remove spaces, hyphens, and semicolons
-        if grep -q "^$prof_id;" "$DB_FILE"; then
-            echo "Error: prof_id already exists in the database. Please enter a unique ID."
-        else
-            break
-        fi
-    done
-
-    # Step 3: Request and validate Prof_name
-    while true; do
-        read -rp "Enter Prof_name (max 40 characters): " Prof_name
-        Prof_name="${Prof_name//;/}"  # Remove semicolons
-        if [ ${#Prof_name} -le 40 ]; then
-            break
-        else
-            echo "Error: Prof_name exceeds 40 characters. Please enter again."
-        fi
-    done
-
-    # Step 4: Request and validate Prof_description
-    while true; do
-        read -rp "Enter Prof_description (max 200 characters): " Prof_description
-        Prof_description="${Prof_description//;/}"  # Remove semicolons
-        if [ ${#Prof_description} -le 200 ]; then
-            break
-        else
-            echo "Error: Prof_description exceeds 200 characters. Please enter again."
-        fi
-    done
-
-    # Step 5: Request and validate URL
-    while true; do
-        read -rp "Enter URL for Tobecloned_base_audio (leave blank to keep current): " url
-        url="${url//;/}"  # Remove semicolons
-        if [ -z "$url" ]; then
-            break  # Keep the existing value
-        elif [[ "$url" =~ ^https?:// ]]; then
-            G8_IN_SAMPLE_AUD="$url"
-            break
-        else
-            echo "Error: Invalid URL format. Please enter a valid URL."
-        fi
-    done
-
-
-    # Step 6: Run function and capture the returned value
-	# if 
-	
-	if [ ! -e "$DB_FILE" ]; then
-		echo "   + !!DB_FILE does not exist. Executing commands..."
-		echo "#$prof_id;$Prof_name;$Prof_description;$G8_VOX_ID" > "$DB_FILE"
-	fi
-
-    G8_VOX_ID=$(g8_11lab_clone_voice)
-    if [ -n "$G8_VOX_ID" ]; then
-        # Add new record to DB if function succeeded
-        echo "  + Record added to $DB_FILE"
-    else
-        echo "   + !!Error: g8_11lab_clone_voice function failed"
-        g8_exit_error
-    fi
-
-    # Step 8: Display all collected values and the added record
-    echo "Collected values:"
-    echo "prof_id: $prof_id"
-    echo "Prof_name: $Prof_name"
-    echo "Prof_description: $Prof_description"
-    echo "G8_IN_SAMPLE_AUD: $G8_IN_SAMPLE_AUD"
-    echo "G8_VOX_ID: $G8_VOX_ID"
-
-    echo "Record added:"
-    tail -n 1 "$DB_FILE"
-}
-
 function g8_11lab_clone_voice() {
     # Clones a voice on Eleven Labs using a sample URL and returns the voice_id
 
@@ -913,11 +820,11 @@ function take_voice_id_entry_interactive() {
 	# This function takes the professor id and finds the corresponding voice id of the professor
     echo "Voice ID Setup"
 
-    read -p "Enter Professor ID: " professor_id
+    #read -p "Enter Professor ID: " professor_id
 
-    local exists=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM professors WHERE professor_id = '$professor_id';")
+    local exists=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM professors WHERE professor_id = '$prof_id';")
     if [[ "$exists" -eq 0 ]]; then
-        echo "Error: Professor ID '$professor_id' not found."
+        echo "Error: Professor ID '$prof_id' not found."
         return 1
     fi
 
@@ -932,14 +839,14 @@ function take_voice_id_entry_interactive() {
                 fi
 
                 echo "Fetching professor profile for metadata..."
-                local accent=$(sqlite3 "$DB_FILE" "SELECT accent FROM professors WHERE professor_id = '$professor_id';")
-                local age=$(sqlite3 "$DB_FILE" "SELECT age FROM professors WHERE professor_id = '$professor_id';")
-                local gender=$(sqlite3 "$DB_FILE" "SELECT gender FROM professors WHERE professor_id = '$professor_id';")
+                local accent=$(sqlite3 "$DB_FILE" "SELECT accent FROM professors WHERE professor_id = '$prof_id';")
+                local age=$(sqlite3 "$DB_FILE" "SELECT age FROM professors WHERE professor_id = '$prof_id';")
+                local gender=$(sqlite3 "$DB_FILE" "SELECT gender FROM professors WHERE professor_id = '$prof_id';")
 
-                local voice_id=$(g8_elab_add_voice "$professor_id" "$audio_file" "" "" "$accent" "$age" "$gender")
+                local voice_id=$(g8_elab_add_voice "$prof_id" "$audio_file" "" "" "$accent" "$age" "$gender")
 
                 if [[ -n "$voice_id" ]]; then
-                    upsert_voice_id_entry "$professor_id" "$voice_id"
+                    upsert_voice_id_entry "$prof_id" "$voice_id"
                 else
                     echo "Voice creation failed."
                     return 1
@@ -953,7 +860,7 @@ function take_voice_id_entry_interactive() {
                     echo "Voice ID is required."
                     return 1
                 fi
-                upsert_voice_id_entry "$professor_id" "$voice_id"
+                upsert_voice_id_entry "$prof_id" "$voice_id"
                 return 0
                 ;;
 
@@ -1299,8 +1206,6 @@ if [ -f .env ]; then
   set +a
 fi
 
-source G8_VAR.sh
-
 # Check if an argument is provided
 if [ -z "$1" ]; then
     echo " + !! No argument provided. Displaying help..."
@@ -1323,9 +1228,6 @@ case "$1" in
     -setup_video_env|-A_step_3)
         g8_setup_video_env
         g8_get_checkpoints
-        ;;
-    -setup_clone_base_audio_files|-A_step_4)
-        g8_clone_base_audio_file 
         ;;
     -add_professor_interactive)
 		setup_database
