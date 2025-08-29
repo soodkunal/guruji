@@ -734,6 +734,7 @@ function g8_step1_get_from_prof() {
     echo "--------------------------------------------------"
     echo "Please make sure your metadata follows the above format."
     echo ""
+
     read -p "Enter URL to download the lecture text file: " G8_TXT
     [ -z "$G8_TXT" ] && echo " ! Error: No URL provided for text." && return 1
 
@@ -787,8 +788,8 @@ function g8_step1_get_from_prof() {
     fi
     
      # Export so other steps can use
-    export G8_IN_PROF_TXT="$G8_PROJ_DIR/input/g8_in_$prof_id_${G8_PROF_NAME}_${TIMESTAMP}.txt"
-    export G8_IN_MTDT="$G8_PROJ_DIR/input/g8_in_$prof_id_${G8_PROF_NAME}_${TIMESTAMP}.json"
+    export G8_IN_PROF_TXT="$G8_PROJ_DIR/input/g8_in_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.txt"
+    export G8_IN_MTDT="$G8_PROJ_DIR/input/g8_in_${G8_PROF_ID}_${G8_PROF_NAME}_${TIMESTAMP}.json"
 }
 
 function take_professor_entry_interactive() {

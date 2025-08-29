@@ -70,8 +70,8 @@
 			fi
 		fi
 
-		#export G8_PROF_ID="$prof_id"
-		#export G8_PROF_NAME="$prof_name"
+		export G8_PROF_ID="$prof_id"
+		export G8_PROF_NAME="$prof_name"
 
 		# Generate timestamp for unique file naming
 		timestamp=$(date +%Y%m%d_%H%M%S)
