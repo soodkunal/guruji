@@ -953,14 +953,14 @@ function g8_step3_conv_txt_to_wav() {
     read -p "Enter Professor ID: " prof_id
 
     # Get professor name
-    prof_name=$(sqlite3 "$DB_FILE" "SELECT professor_name FROM professors WHERE professor_id=$prof_id;")
+    prof_name=$(sqlite3 "$DB_FILE" "SELECT professor_name FROM professors WHERE professor_id=$G8_PROF_ID;")
     if [ -z "$prof_name" ]; then
         echo "[ERROR] Professor ID $prof_id not found in database."
         return 1
     fi
 
     # Get latest text file from DB
-    SRC_TXT=$(sqlite3 "$DB_FILE" "SELECT gpt_file_path FROM gpt_outputs WHERE professor_id=$prof_id ORDER BY created_at DESC LIMIT 1;")
+    SRC_TXT=$(sqlite3 "$DB_FILE" "SELECT gpt_file_path FROM gpt_outputs WHERE professor_id=$G8_PROF_ID ORDER BY created_at DESC LIMIT 1;")
     if [ ! -f "$SRC_TXT" ]; then
         echo "[ERROR] No lecture text found for Professor $prof_id ($prof_name). Run Step 2 first."
         return 1
@@ -968,7 +968,7 @@ function g8_step3_conv_txt_to_wav() {
     echo "  + Using lecture text: $SRC_TXT"
 
     # Get Voice ID
-    voice_id=$(sqlite3 "$DB_FILE" "SELECT voice_id FROM voice_ids WHERE professor_id=$prof_id;")
+    voice_id=$(sqlite3 "$DB_FILE" "SELECT voice_id FROM voice_ids WHERE professor_id=$G8_PROF_ID;")
     if [ -z "$voice_id" ]; then
         echo "[ERROR] No Voice ID found for Professor $prof_id. Run the voice creation step first."
         return 1
@@ -1021,8 +1021,6 @@ EOF
         return 1
     fi
 }
-
-
 
 function g8_run_prog() {
     echo " + Starting Lecture Video Generation Process"
