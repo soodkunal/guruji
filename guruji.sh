@@ -787,8 +787,8 @@ function g8_step1_get_from_prof() {
     fi
     
      # Export so other steps can use
-    export G8_IN_PROF_TXT="$G8_PROJ_DIR/input/g8_in_${prof_id}_${G8_PROF_NAME}_${TIMESTAMP}.txt"
-    export G8_IN_MTDT="$G8_PROJ_DIR/input/g8_in_${prof_id}_${G8_PROF_NAME}_${TIMESTAMP}.json"
+    export G8_IN_PROF_TXT="$G8_PROJ_DIR/input/g8_in_$prof_id_${G8_PROF_NAME}_${TIMESTAMP}.txt"
+    export G8_IN_MTDT="$G8_PROJ_DIR/input/g8_in_$prof_id_${G8_PROF_NAME}_${TIMESTAMP}.json"
 }
 
 function take_professor_entry_interactive() {
