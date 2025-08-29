@@ -243,8 +243,6 @@ EOF
 function g8_elab_del_voice() {
     # Deletes an Eleven Labs voice and removes it from the database using professor_id
 	
-    local prof_id="$1"
-
     if [ -z "$prof_id" ]; then
         echo "Error: You must provide a professor ID to delete their voice."
         echo "Usage: g8_elab_del_voice professor_id"
