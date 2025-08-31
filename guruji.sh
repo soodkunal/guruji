@@ -1083,110 +1083,15 @@ function g8_run_prog() {
 }
 
 function g8_video_interactive_playback() {
-    echo " + Interactive Video Playback with Voice Control"
+    echo " + Simple Video Playback"
 
-    # 1. Backup originals
-    G8_ORIG_TRANSCRIPT="${G8_OPS_GPT_TXT}.orig"
-    G8_ORIG_VIDEO="${G8_OUTPUT_LECTURE_FILE}.orig"
-    cp "$G8_OPS_GPT_TXT" "$G8_ORIG_TRANSCRIPT"
-    cp "$G8_OUTPUT_LECTURE_FILE" "$G8_ORIG_VIDEO"
-
-    # 2. Play video in background
-    echo " + Playing video. Say 'stop' to pause and regenerate..."
-    cvlc --play-and-exit "$G8_OUTPUT_LECTURE_FILE" & 
-    VLC_PID=$!
-
-    # 3. Listen for stopword via mic
-    echo " + Listening for stopword..."
-    STOP_DETECTED=0
-    while kill -0 $VLC_PID 2>/dev/null; do
-        python3 <<EOF
-import speech_recognition as sr
-import time
-import subprocess
-import sys
-
-STOP_WORDS = ["stop", "pause", "guruji", "doubt"]
-print(" >> Speak during playback. Say 'stop' or 'update' to regenerate content.")
-
-r = sr.Recognizer()
-with sr.Microphone() as source:
-    print(" >> Speak during playback. Say a stop word to regenerate content...")
-    try:
-        audio = r.listen(source, phrase_time_limit=5)
-        phrase = r.recognize_google(audio).lower()
-        print(f"You said: {phrase}")
-        for word in STOP_WORDS:
-            if word in phrase:
-                exit(1)
-    except:
-        pass
-exit(0)
-EOF
-        if [[ $? -eq 1 ]]; then
-            STOP_DETECTED=1
-            echo " ! Stopword detected by user."
-            kill -9 $VLC_PID
-            break
-        fi
-        sleep 1
-    done
-
-    if [[ "$STOP_DETECTED" -eq 0 ]]; then
-        echo " + No stopword detected. Exiting."
-        return 0
+    if [ -z "$G8_OUTPUT_LECTURE_FILE" ] || [ ! -f "$G8_OUTPUT_LECTURE_FILE" ]; then
+        echo " ! No output lecture file found to play."
+        return 1
     fi
 
-    # 4. Get query from mic
-    echo " + Listening to your question..."
-    QUERY=$(python3 -c '
-import speech_recognition as sr
-r = sr.Recognizer()
-with sr.Microphone() as source:
-    print(" > Speak now...")
-    audio = r.listen(source, phrase_time_limit=10)
-try:
-    print(r.recognize_google(audio))
-except:
-    print("")')
-
-    echo " + You asked: '$QUERY'"
-
-    # 5. Get updated response from OpenAI API (placeholder)
-    echo " + Getting response using existing transcript..."
-    new_text=$(python3 -c "
-from openai import OpenAI
-client = OpenAI()
-with open('$G8_ORIG_TRANSCRIPT') as f:
-    transcript = f.read()
-query = '''$QUERY'''
-response = client.chat.completions.create(
-    model='gpt-4',
-    messages=[
-        {'role': 'system', 'content': 'You are a professor.'},
-        {'role': 'user', 'content': f'Given this lecture transcript:\n{transcript}\n\nRespond to this question: {query}'}
-    ])
-print(response.choices[0].message.content.strip())
-")
-
-    echo "$new_text" > "${G8_OPS_GPT_TXT}.tmp"
-
-    # 6. Generate new voice from GPT response
-    echo " + Generating new audio and video..."
-    export G8_OPS_GPT_TXT="${G8_OPS_GPT_TXT}.tmp"
-    g8_step3_conv_txt_to_wav
-
-    # 7. Generate updated video
-    export G8_OUTPUT_LECTURE_FILE="${G8_OUTPUT_LECTURE_FILE}.tmp"
-    g8_run_prog
-
-    # 8. Playback updated video
-    echo " + Playing updated video..."
-    vlc --play-and-exit "$G8_OUTPUT_LECTURE_FILE"
-
-    # 9. Resume original lecture
-    echo " + Resuming original lecture..."
-    cvlc "$G8_ORIG_VIDEO"
+    echo " + Playing video: $G8_OUTPUT_LECTURE_FILE"
+    cvlc --play-and-exit "$G8_OUTPUT_LECTURE_FILE"
 }
 
 # =================================================================
