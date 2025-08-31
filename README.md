@@ -1,4 +1,4 @@
-# Guru Ji
+# Guru Ji Smart 21st Century Next Gen. AI-Based Professor
 
 # Basic requirements
   OS - This script is tested on : Ubuntu numbat (24.04-1) 
@@ -56,7 +56,7 @@
 </ol>
 
 # =======================
-<h3>How to Run &#x1F680;</h3>
+<h3>How to Run</h3>
 <ol>
   <li><strong>Open your terminal.</strong></li>
   <li>
