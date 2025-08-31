@@ -87,6 +87,7 @@ Setup & Initialization
 	<li><code>./guruji.sh -init | -reset | -A_step_1</code>: Initializes or resets the project environment. This creates the necessary directories and prepares the workspace for a fresh run.</li>
 	<li><code>./guruji.sh -anaconda | -A_step_2</code>: Sets up the project's Conda environment, installing all required Python packages and dependencies.</li>
 	<li><code>./guruji.sh -setup_video_env | -A_step_3</code>: Configures the environment specifically for video synthesis and downloads the necessary pre-trained model checkpoints.</li>
+	<li><code> conda activate video_reatlaking</code>: To activate the environment created in A_step_3</li>
 </ul>
 
 # =======================
