@@ -21,7 +21,7 @@
 <ul>
     <li>Script Version: 3.1.2
     <li>Date of release: 19-November-2024
-    <li>Author: Mr Kunal Sood, Mr Nishant
+    <li>Author: Mr Kunal Sood
     <li>Project: Towards submission of final project of B.Tech IV Year
     <li>Project Mentors: Dr. Usha Batra, Mr. Alok Sinha
 </ul>
