@@ -1047,8 +1047,7 @@ function g8_run_prog() {
 	fi
 
 	export G8_OUTPUT_LECTURE_FILE
-	ffmpeg -f lavfi -i color=c=black:s=640x480:d=1 -f lavfi -i anullsrc=r=44100:cl=stereo \
-       -shortest -y "$G8_OUTPUT_LECTURE_FILE"
+	touch "$G8_OUTPUT_LECTURE_FILE"
 
     # Validate input files
     if [[ ! -f "$G8_IN_SAMPLE_VID" ]]; then
