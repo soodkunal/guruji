@@ -355,11 +355,11 @@ function g8_elab_txt2vox(){
 	#~ curl --request POST   
 		#~ --url 'https://api.elevenlabs.io/v1/text-to-speech/9BWtsMINqrJLrRacOk9x?output_format=mp3_44100_128'   
 		#~ --header 'Content-Type: application/json'   
-		#~ --header 'xi-api-key: sk_054cb28e447214de104e239a543f22b6a914cc3d279d982e'   
+		#~ --header 'xi-api-key: XXXXXXXXXXXXXX'   
 		#~ --data '{"text": "Hello buddy, how are you doing today","voice_settings": {"stability": 1,"similarity_boost": 1,"style": 0.5} }' 
 		#~ --output "abc.mp3"	
 
-	#G8_ELAB_VOICE_ID="9BWtsMINqrJLrRacOk9x"
+	#G8_ELAB_VOICE_ID="XXXXXXXXXX"
 	# Prompt user to enter the professor ID
     read -p "Enter Professor ID: " prof_id
 
